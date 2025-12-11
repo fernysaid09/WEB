@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Computadores</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+<header>
+    <h1>Proyecto Final - Programación Modular 2025-3</h1>
+</header>
+
+<nav>
+    <a href="index.html">Inicio</a>
+    <a href="JSON.html">Datos en Vivo</a>
+    <a href="AcercaDe.html">Acerca de</a>
+</nav>
+
+<body>
+    <div class="seccion" id="datos">
+        <h2>Datos Registrados (desde GitHub)</h2>
+        <p>Estos son todos los registros guardados por el programa Java. Se actualizan automáticamente.</p>
+
+        <div id="contenido-json">
+            <p>Cargando datos desde la nube...</p>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+fetch('https://raw.githubusercontent.com/fernysaid09/Tienda-Computadores-Datos/main/datos_computadores.json')
+    .then(res => res.json())
+    .then(registros => {  
+        let html = "";
+
+        if (!Array.isArray(registros) || registros.length === 0) {
+            html = "<p style='text-align:center; color:#666; font-size:1.2rem;'>Aún no hay datos registrados.</p>";
+        } else {
+            registros.reverse().forEach(registro => {
+                html += `<div style="margin:4rem 0; padding:2rem; background:white; border-radius:15px; box-shadow:0 6px 20px rgba(0,0,0,0.15);">`;
+
+                html += `<table style="width:100%; border-collapse:collapse; font-size:1.1rem;">`;
+                html += `<thead>
+                            <tr style="background:#004080; color:white;">
+                                <th style="padding:14px; border-radius:10px 0 0 0;">Mes / Marca</th>`;
+                registro.marcas.forEach(m => html += `<th style="padding:14px;">${m}</th>`);
+                html += `       </tr>
+                         </thead>
+                         <tbody>`;
+
+                registro.meses.forEach((mes, i) => {
+                    html += `<tr>`;
+                    html += `<td style="padding:14px; font-weight:bold; background:#e6f2ff;">${mes}</td>`;
+                    registro.ventas[i].forEach(v => {
+                        html += `<td style="padding:14px; text-align:center;">${v}</td>`;
+                    });
+                    html += `</tr>`;
+                });
+
+                html += `   </tbody>
+                        </table>`;
+                html += `</div>`;
+            });
+        }
+
+        document.getElementById('contenido-json').innerHTML = html;
+    })
+    .catch(() => {
+        document.getElementById('contenido-json').innerHTML = "<p style='color:red; text-align:center;'>Error al cargar los datos.</p>";
+    });
+</script>
